@@ -5,6 +5,7 @@ import time
 from matplotlib import pyplot as plt
 import functional_dataloaders as fd
 import pandas as pd
+import os
 
 
 
@@ -149,15 +150,15 @@ class LNO_trainer():
             print(f"Epoch {epoch+1}/{epochs} - Loss: {self.train_loss[epoch]:.4f} - Vali Loss: {self.vali_loss[epoch]:.4f} - Time: {time.time()-start_time:.2f}s")
             
             if graphing_frequency > 0 and epoch % graphing_frequency == 0:
-                validation_times = self.valiloader.dataset[100][0][:, 1].numpy()
-                y_of_t_validation = self.valiloader.dataset[100][1][:, 0].numpy()
-                f_of_t_validation = self.valiloader.dataset[100][0][:, 0].numpy()
-                y_pred_validation = self.model(self.valiloader.dataset[100][0].unsqueeze(0)).detach().numpy()
+                validation_times = self.valiloader.dataset[15][0][:, 1].numpy()
+                y_of_t_validation = self.valiloader.dataset[15][1][:, 0].numpy()
+                f_of_t_validation = self.valiloader.dataset[15][0][:, 0].numpy()
+                y_pred_validation = self.model(self.valiloader.dataset[15][0].unsqueeze(0)).detach().numpy()
                 
-                test_times = self.dataloader.dataset[100][0][:, 1].numpy()
-                y_of_t_test = self.dataloader.dataset[100][1][:, 0].numpy()
-                f_of_t_test = self.dataloader.dataset[100][0][:, 0].numpy()
-                y_pred_test = self.model(self.dataloader.dataset[100][0].unsqueeze(0)).detach().numpy()
+                test_times = self.dataloader.dataset[15][0][:, 1].numpy()
+                y_of_t_test = self.dataloader.dataset[15][1][:, 0].numpy()
+                f_of_t_test = self.dataloader.dataset[15][0][:, 0].numpy()
+                y_pred_test = self.model(self.dataloader.dataset[15][0].unsqueeze(0)).detach().numpy()
                 
                 valid_mask = ~np.isnan(y_of_t_validation)
                 valid_times = validation_times[valid_mask]
@@ -168,7 +169,9 @@ class LNO_trainer():
                 plt.plot(validation_times, f_of_t_validation, label='Force')
                 plt.legend()
                 plt.title('Validation')
-                plt.show()
+                plt.savefig('LNO_validation_plot.png')
+                
+                plt.clf()  # Clear the figure for the next plot
                 
                 valid_mask = ~np.isnan(y_of_t_test)
                 valid_times = test_times[valid_mask]
@@ -179,7 +182,10 @@ class LNO_trainer():
                 plt.plot(test_times, f_of_t_test, label='Force')
                 plt.legend()
                 plt.title('Training')
-                plt.show()
+                plt.savefig('LNO_training_plot.png')
+                
+                plt.clf()  # Clear the figure for the next plot
+                
             
     def graph_loss(self):
         plt.plot(self.train_loss, label='train')
@@ -188,11 +194,14 @@ class LNO_trainer():
         plt.show()
         
 if __name__ == '__main__':
-    LNO_training_dataset = pd.read_csv('Training Data\Duffing Oscillator\duffing_oscillator_training_data.csv')
+    print(os.getcwd())
+    file_path = os.path.join('Training Data', 'Duffing Oscillator', 'duffing_oscillator_training_data.csv')
+    LNO_training_dataset = pd.read_csv(file_path)
     #LNO_sparse_training_dataset = fd.SparsePandasDataset(LNO_training_dataset, .01, 0)
     LNO_sparse_training_dataset = fd.PandasDataset(LNO_training_dataset)
     LNO_training_dataloader = torch.utils.data.DataLoader(LNO_sparse_training_dataset, batch_size=32, shuffle=True)
-    LNO_validation_dataset = pd.read_csv('Training Data\Duffing Oscillator\duffing_oscillator_test_data.csv')
+    file_path = os.path.join('Training Data', 'Duffing Oscillator', 'duffing_oscillator_test_data.csv')
+    LNO_validation_dataset = pd.read_csv(file_path)
     #LNO_sparse_validation_dataset = fd.SparsePandasDataset(LNO_validation_dataset, .1, 1)
     LNO_validation_dataset = fd.PandasDataset(LNO_validation_dataset)
     LNO_validation_dataloader = torch.utils.data.DataLoader(LNO_validation_dataset, batch_size=32, shuffle=True)

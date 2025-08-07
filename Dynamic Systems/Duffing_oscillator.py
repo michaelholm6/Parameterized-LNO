@@ -49,23 +49,31 @@ def generate_duffing_oscillator_training_data(a_min_traing, a_max_train, a_step_
         x_of_t, f_of_t, x_t, f_t = genrate_duffing_oscillator_data(y_zero, t_final, steps, c, a, decay, omega)
         test_dataframe.loc[len(test_dataframe)] = [np.array(f_of_t), np.array(x_of_t), np.array(f_t), np.array(x_t), np.array(c)]
         
-    if os.path.isfile(r'Training Data\Duffing Oscillator\duffing_oscillator_training_data.csv'):
-        training_dataframe.to_csv(r'Training Data\Duffing Oscillator\duffing_oscillator_training_data.csv', float_format='%.10f', mode='a', header=False)
-    else:
-        training_dataframe.to_csv(r'Training Data\Duffing Oscillator\duffing_oscillator_training_data.csv', float_format='%.10f')
-    if os.path.isfile(r'Training Data\Duffing Oscillator\duffing_oscillator_test_data.csv'):
-        test_dataframe.to_csv(r'Training Data\Duffing Oscillator\duffing_oscillator_test_data.csv', float_format='%.10f', mode='a', header=False)
-    else:
-        test_dataframe.to_csv(r'Training Data\Duffing Oscillator\duffing_oscillator_test_data.csv', float_format='%.10f')
-    
-<<<<<<<< HEAD:Parameterized_LNO/Dynamic Systems/Duffing_oscillator.py
-generate_duffing_oscillator_training_data(0.05, 10, .5, .14, 9.09, .1, 5, 0.3, 0.05, [0, 0], 10, 4000)
-#generate_duffing_oscillator_training_data(0.05, 10, .5, .14, 9.09, .1, 5, 0.1, 0.05, [0, 0], 10, 4000)
-# generate_duffing_oscillator_training_data(0.05, 10, .5, .14, 9.09, .1, 5, 0.5, 0.05, [0, 0], 10, 4000)
-# generate_duffing_oscillator_training_data(0.05, 10, .5, .14, 9.09, .1, 5, 0.5, 0.05, [0, 0], 10, 4000)
-# generate_duffing_oscillator_training_data(0.05, 10, .5, .14, 9.09, .1, 5, 0.5, 0.05, [0, 0], 10, 4000)
-========
-generate_duffing_oscillator_training_data(10, 20, .15, 20, 30, .15, 5, 0.3, 0.05, [0, 0], 10, 4000)
+    # Define folder path
+    folder_path = os.path.join("Training Data", "Duffing Oscillator")
 
-#test_duffing_oscillator(1, 5, 20, 2000, 0.3, 0.05, [0, 0])
->>>>>>>> parent of 77cecef (Completed code to combine LES SINDy and the LNO):My Code/Dynamic Systems/Duffing_oscillator.py
+    # Ensure the folder exists
+    os.makedirs(folder_path, exist_ok=True)
+
+    # File paths
+    train_file = os.path.join(folder_path, "duffing_oscillator_training_data.csv")
+    test_file = os.path.join(folder_path, "duffing_oscillator_test_data.csv")
+
+    # Save training data
+    if os.path.isfile(train_file):
+        training_dataframe.to_csv(train_file, float_format="%.10f", mode="a", header=False)
+    else:
+        training_dataframe.to_csv(train_file, float_format="%.10f")
+
+    # Save test data
+    if os.path.isfile(test_file):
+        test_dataframe.to_csv(test_file, float_format="%.10f", mode="a", header=False)
+    else:
+        test_dataframe.to_csv(test_file, float_format="%.10f")
+    
+# generate_duffing_oscillator_training_data(0.05, 10, .5, .14, 9.09, .1, 5, 0.3, 0.05, [0, 0], 10, 4000)
+# generate_duffing_oscillator_training_data(0.05, 10, .5, .14, 9.09, .1, 5, 0.1, 0.05, [0, 0], 10, 4000)
+# generate_duffing_oscillator_training_data(0.05, 10, .5, .14, 9.09, .1, 5, 0.5, 0.05, [0, 0], 10, 4000)
+# generate_duffing_oscillator_training_data(0.05, 10, .5, .14, 9.09, .1, 5, 0.7, 0.05, [0, 0], 10, 4000)
+# generate_duffing_oscillator_training_data(0.05, 10, .5, .14, 9.09, .1, 5, 0.9, 0.05, [0, 0], 10, 4000)
+
